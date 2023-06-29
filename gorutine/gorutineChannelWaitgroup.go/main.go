@@ -9,23 +9,25 @@ func main() {
 	wg := sync.WaitGroup{}
 	c := make(chan int)
 	wg.Add(1)
-	go producer(c, &wg)
+	go producer(&wg, c)
 	wg.Add(1)
-	go reciver(c, &wg)
+	go reciver(&wg, c)
 	wg.Wait()
 }
 
-func producer(c chan int, wg *sync.WaitGroup) {
+func producer(wg *sync.WaitGroup, c chan int) {
 	defer wg.Done()
 	for i := 0; i < 5; i++ {
 		c <- i
 	}
-	close(c) // Close the channel after sending all values
+
+	close(c)
 }
 
-func reciver(c chan int, wg *sync.WaitGroup) {
+func reciver(wg *sync.WaitGroup, c chan int) {
 	defer wg.Done()
 	for i := range c {
-		fmt.Println(i)
+		fmt.Println("c:", i)
 	}
+
 }
